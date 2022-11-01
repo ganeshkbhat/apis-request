@@ -1,0 +1,43 @@
+{
+  "name": "request-apis",
+  "version": "0.0.1",
+  "description": "npm module for common request APIs and basic http requests utils",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "exports": {
+    "require": "./index.js",
+    "import": "./index.mjs"
+  },
+  "scripts": {
+    "test": "mocha --reporter spec --recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ganeshkbhat/apis-request.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ganeshkbhat/apis-request/issues"
+  },
+  "homepage": "https://github.com/ganeshkbhat/apis-request#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^18.11.3",
+    "chai": "^4.3.6",
+    "root-dirs": "^0.0.2",
+    "concurrency.js": "^0.0.1",
+    "fssys": "^1.0.1",
+    "get-imported": "^0.0.5",
+    "hasher-apis": "^0.0.1",
+    "hpp": "^0.2.3",
+    "mocha": "^10.0.0",
+    "nsp": "^2.8.1",
+    "nsp-api": "^1.0.3",
+    "safe-regex": "^2.1.1",
+    "sinon": "^14.0.0",
+    "unimported": "^1.22.0"
+  },
+  "author": "Ganesh B",
+  "license": "MIT"
+}
