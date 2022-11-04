@@ -240,5 +240,4 @@ module.exports._request = _request;
 module.exports._isValidURL = _isValidURL;
 module.exports._getProtocol = _getProtocol;
 module.exports._checkHttpsProtocol = _checkHttpsProtocol;
-module.exports._getRequest = _getRequest;
 module.exports._fetch = _fetch;

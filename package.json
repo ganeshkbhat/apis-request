@@ -1,6 +1,6 @@
 {
   "name": "request-apis",
-  "version": "0.0.22-beta",
+  "version": "0.0.23-beta",
   "description": "npm module for common request APIs and basic http requests utils",
   "main": "index.js",
   "directories": {
