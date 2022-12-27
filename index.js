@@ -17,7 +17,7 @@
 'use strict';
 
 
-const { _isValidURL, _getProtocol, _checkHttpsProtocol, _fetch, _deleteRequest, _getRequest, _postRequest, _putRequest, _patchRequest, _request } = require("./src/requests.js");
+const { _isValidURL, _getProtocol, _checkHttpsProtocol, _fetch, _deleteRequest, _getRequest, _postRequest, _putRequest, _patchRequest, _request, _getRequireOrImport } = require("./src/requests.js");
 
 
 // Make requests
@@ -36,5 +36,5 @@ module.exports._isValidURL = _isValidURL;
 module.exports._getProtocol = _getProtocol;
 module.exports._checkHttpsProtocol = _checkHttpsProtocol;
 module.exports._fetch = _fetch;
-
+module.exports._getRequireOrImport = _getRequireOrImport;
 

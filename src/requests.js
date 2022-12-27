@@ -24,19 +24,25 @@ const fs = require('fs');
 
 /** New Structure for Revamped version of index.js with better isolation, and independent functions */
 
-
 /**
  *
  *
  * @param {*} module_name
  * @return {*} 
  */
-module.exports._getRequireOrImport = function _getRequireOrImport(module_name) {
+function _getRequireOrImport(module_name) {
     if (process.versions.node.split('.')[0] > "14") {
+        if (module_name.includes(".json")) {
+            return import(module_name, { assert: { type: 'json' } });
+        }
+        if (module_name.includes(".wasm")) {
+            return import(module_name, { type: "module", assert: { type: "webassembly" } });
+        }
         return import(module_name);
     }
     return require(module_name);
 }
+
 
 /**
  *
@@ -46,8 +52,16 @@ module.exports._getRequireOrImport = function _getRequireOrImport(module_name) {
  * @return {*} 
  */
 function _deleteRequest(options, data, protocol) {
-
+    return new Promise((resolve, reject) => {
+        const { request } = (protocol === "https") ? _getRequireOrImport("https") : _getRequireOrImport("http");
+        return request(options, (res) => {
+            let result = '';
+            res.on('data', (chunk) => result += chunk);
+            res.on('end', () => resolve(JSON.parse(result)));
+        }).on('error', (err) => reject(err));
+    });
 }
+
 
 /**
  *
@@ -109,10 +123,10 @@ function _putRequest(options, data, protocol) {
  */
 function _request(options, data, protocol) {
     return new Promise((resolve, reject) => {
-        const { request } = (protocol === "https") ? _getRequireOrImport("https") : _getRequireOrImport("http");
+        const https = (protocol === "https") ? _getRequireOrImport("https") : _getRequireOrImport("http");
         const querystring = _getRequireOrImport('querystring');
 
-        let req = request(options, (res) => {
+        let req = https.request(options, (res) => {
             let result = '';
             res.on('data', (chunk) => result += chunk);
             res.on('end', () => resolve(JSON.parse(result)));
@@ -139,7 +153,7 @@ function _request(options, data, protocol) {
  * @return {*} 
  */
 function _checkHttpsProtocol(url) {
-    let givenURL;
+    var givenURL;
     try {
         givenURL = new URL(url);
     } catch (error) {
@@ -155,7 +169,7 @@ function _checkHttpsProtocol(url) {
  * @return {*} 
  */
 function _getProtocol(url) {
-    let givenURL;
+    var givenURL;
     try {
         givenURL = new URL(url);
     } catch (error) {
@@ -181,7 +195,7 @@ function _getProtocol(url) {
  * @return {*} 
  */
 function _isValidURL(url) {
-    let givenURL;
+    var givenURL;
     try {
         givenURL = new URL(url);
     } catch (error) {
@@ -200,7 +214,7 @@ function _isValidURL(url) {
 function _getRequest(options, data, protocol) {
     return new Promise((resolve, reject) => {
         const { get } = (protocol === "https") ? require("https") : require("http");
-        get(options, (res) => {
+        return get(options, (res) => {
             let result = '';
             res.on('data', (chunk) => result += chunk);
             res.on('end', () => resolve(JSON.parse(result)));
@@ -217,7 +231,7 @@ function _getRequest(options, data, protocol) {
  * @param {*} _requireWriteImport
  * @return {*} 
  */
-function _fetch(request, options, localGitFileCacheUrl, _requireWriteImport) {
+function _fetchWrite(request, options, localGitFileCacheUrl, _requireWriteImport) {
     return fetch(request).then(response => response.text())
         .then(function (data) {
             return _requireWriteImport(request, localGitFileCacheUrl, data, options)
@@ -225,7 +239,23 @@ function _fetch(request, options, localGitFileCacheUrl, _requireWriteImport) {
 }
 
 
-// Make requests
+function _fetch() {
+    return fetch('https://example.com')
+        .then(res => {
+            res.text()       // response body (=> Promise)
+            res.json()       // parse response body (=> Promise)
+            res.status       //=> 200
+            res.statusText   //=> 'OK'
+            res.redirected   //=> false
+            res.ok           //=> true
+            res.url          //=> 'https://new.example.com'
+            res.type         //=> 'basic'
+            //   ('cors' 'default' 'error'
+            //    'opaque' 'opaqueredirect')
+            res.headers.get('Content-Type')
+        })
+}
+
 
 module.exports._deleteRequest = _deleteRequest;
 module.exports._getRequest = _getRequest;
@@ -240,4 +270,6 @@ module.exports._request = _request;
 module.exports._isValidURL = _isValidURL;
 module.exports._getProtocol = _getProtocol;
 module.exports._checkHttpsProtocol = _checkHttpsProtocol;
+module.exports._fetchWrite = _fetchWrite;
 module.exports._fetch = _fetch;
+module.exports._getRequireOrImport = _getRequireOrImport;
