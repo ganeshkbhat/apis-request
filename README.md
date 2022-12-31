@@ -12,7 +12,6 @@ Find the demos in the [demos folder](./demos)
 const reqApis = require("request-apis");
 reqApis.request("https://www.google.com");
 
-
 ```
 
 
