@@ -9,7 +9,6 @@
  * File: src/request.js
  * File Description: 
  * 
- * git-rest: https://www.softwaretestinghelp.com/github-rest-api-tutorial/#:~:text=Log%20in%20to%20your%20GitHub,and%20click%20on%20Create%20Token.
  * 
 */
 
@@ -18,8 +17,11 @@
 'use strict';
 
 
-const path = require('path');
+const path = require("path");
 const fs = require('fs');
+const METHODS = require("./constants/methods").METHODS;
+const PROTOCOLS = require("./constants/http_protocols").PROTOCOLS;
+const PROTOCOL_NODE_MODULES = require("./constants/http_protocols").PROTOCOL_NODE_MODULES;
 
 
 /** New Structure for Revamped version of index.js with better isolation, and independent functions */
@@ -44,6 +46,20 @@ function _getRequireOrImport(module_name) {
 }
 
 
+
+/**
+ *
+ *
+ * @param {*} options
+ * @param {*} data
+ * @return {*} 
+ */
+function _optionsRequest(options, data, protocol) {
+    return _request({ ...options, method: METHODS.OPTIONS }, data, protocol, connectHandler, errorHandler, upgradeHandler);
+}
+
+
+
 /**
  *
  *
@@ -52,34 +68,9 @@ function _getRequireOrImport(module_name) {
  * @return {*} 
  */
 function _deleteRequest(options, data, protocol) {
-    return new Promise((resolve, reject) => {
-        const { request } = (protocol === "https") ? _getRequireOrImport("https") : _getRequireOrImport("http");
-        return request(options, (res) => {
-            let result = '';
-            res.on('data', (chunk) => result += chunk);
-            res.on('end', () => resolve(JSON.parse(result)));
-        }).on('error', (err) => reject(err));
-    });
+    return _request({ ...options, method: METHODS.DELETE }, data, protocol, connectHandler, errorHandler, upgradeHandler);
 }
 
-
-/**
- *
- *
- * @param {*} options
- * @param {*} data
- * @return {*} 
- */
-function _getRequest(options, data, protocol) {
-    return new Promise((resolve, reject) => {
-        const { get } = (protocol === "https") ? _getRequireOrImport("https") : _getRequireOrImport("http");
-        let req = get(options, (res) => {
-            let result = '';
-            res.on('data', (chunk) => result += chunk);
-            res.on('end', () => resolve(JSON.parse(result)));
-        }).on('error', (err) => reject(err));
-    });
-}
 
 /**
  *
@@ -89,7 +80,7 @@ function _getRequest(options, data, protocol) {
  * @return {*} 
  */
 function _patchRequest(options, data, protocol) {
-
+    return _request({ ...options, method: METHODS.PATCH }, data, protocol, connectHandler, errorHandler, upgradeHandler);
 }
 
 /**
@@ -100,7 +91,7 @@ function _patchRequest(options, data, protocol) {
  * @return {*} 
  */
 function _postRequest(options, data, protocol) {
-
+    return _request({ ...options, method: METHODS.POST }, data, protocol, connectHandler, errorHandler, upgradeHandler);
 }
 
 /**
@@ -111,7 +102,7 @@ function _postRequest(options, data, protocol) {
  * @return {*} 
  */
 function _putRequest(options, data, protocol) {
-
+    return _request({ ...options, method: METHODS.PUT }, data, protocol, connectHandler, errorHandler, upgradeHandler);
 }
 
 /**
@@ -121,29 +112,72 @@ function _putRequest(options, data, protocol) {
  * @param {*} data
  * @return {*} 
  */
-function _request(options, data, protocol) {
+function _getRequest(options, data, protocol, connectHandler, errorHandler, upgradeHandler) {
+    return _request({ ...options, method: METHODS.GET }, data, protocol, connectHandler, errorHandler, upgradeHandler);
+}
+
+/**
+ *
+ *
+ * @param {*} options
+ * @param {*} data
+ * @return {*} 
+ */
+function _request(options, data, protocol, httpType = "https", connectHandler = (res, socket, head) => { }, errorHandler = (e) => e, upgradeHandler = (res, socket, upgradeHead) => { socket.end(); process.exit(0); }) {
     return new Promise((resolve, reject) => {
-        const https = (protocol === "https") ? _getRequireOrImport("https") : _getRequireOrImport("http");
-        const querystring = _getRequireOrImport('querystring');
+        const querystring = require('querystring');
+        var netHttp;
+        
+        switch (httpType) {
+            case httpType === PROTOCOL_MODULES.HTTP:
+                netHttp = require(PROTOCOL_MODULES.HTTP);
+                break;
+            case httpType === PROTOCOL_MODULES.HTTPS:
+                netHttp = require(PROTOCOL_MODULES.HTTPS);
+                break;
+            case httpType === PROTOCOL_MODULES.HTTP2:
+                netHttp = require(PROTOCOL_MODULES.HTTP2);
+                break;
+        }
 
-        let req = https.request(options, (res) => {
-            let result = '';
-            res.on('data', (chunk) => result += chunk);
-            res.on('end', () => resolve(JSON.parse(result)));
-        }).on('error', (err) => reject(err));
+        options.agent = new netHttp.Agent(options) || false;
 
-        let out_text = querystring.escape(JSON.stringify(data));
-        req.write(out_text);
-        req.on('connect', (res, socket, head) => { });
-        req.on('error', (e) => { console.error(e); });
-        req.on('upgrade', (res, socket, upgradeHead) => {
-            socket.end();
-            process.exit(0);
+        const req = netHttp.request({ method: 'GET', ...options }, res => {
+            const chunks = [];
+            // res.setEncoding('utf8');
+            res.on('data', data => chunks.push(data));
+            res.on('end', () => {
+                let resBody = Buffer.concat(chunks);
+                switch (res.headers['content-type']) {
+                    case 'application/json':
+                        resBody = JSON.parse(resBody);
+                        break;
+                    case 'application/xml':
+                        const XML = require("fast-xml-parser");
+                        resBody = XML.parse(resBody);
+                        break;
+                    case 'text/html':
+                        resBody = resBody.toString();
+                        break;
+                    case 'text/plain':
+                        resBody = resBody.toString();
+                        break;
+                }
+                resolve(resBody);
+            });
         });
+
+        req.on('connect', connectHandler);
+        req.on('error', e => reject(errorHandler(e)));
+        req.on('upgrade', upgradeHandler);
+
+        if (!!postData) {
+            // req.write(querystring.escape(JSON.stringify(postData)));
+            req.write(postData);
+        }
         req.end();
     });
 }
-
 
 
 /**
@@ -153,14 +187,13 @@ function _request(options, data, protocol) {
  * @return {*} 
  */
 function _checkHttpsProtocol(url) {
-    var givenURL;
     try {
-        givenURL = new URL(url);
+        return new URL(url).protocol === "https:";
     } catch (error) {
         return false;
     }
-    return givenURL.protocol === "https:";
 }
+
 
 /**
  *
@@ -169,17 +202,16 @@ function _checkHttpsProtocol(url) {
  * @return {*} 
  */
 function _getProtocol(url) {
-    var givenURL;
     try {
-        givenURL = new URL(url);
+        return new URL(url).protocol;
     } catch (error) {
         return false;
     }
-    return givenURL.protocol === "http:" || givenURL.protocol === "https:";
 }
 
+
 // // Avoid 
-// function isValidURL(string) {
+// function isValidURLRegex(string) {
 //     var res =
 //         string.match(/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-
 //             ]+[a - zA - Z0 - 9]\.[^\s]{ 2,}| www\.[a - zA - Z0 - 9][a - zA - Z0 - 9 -] + [a - zA - Z0 - 9]
@@ -188,6 +220,7 @@ function _getProtocol(url) {
 //     return (res !== null);
 // };
 
+
 /**
  *
  *
@@ -195,32 +228,13 @@ function _getProtocol(url) {
  * @return {*} 
  */
 function _isValidURL(url) {
-    var givenURL;
     try {
-        givenURL = new URL(url);
+        return !!new URL(url);
     } catch (error) {
         return false;
     }
-    return true;
 }
 
-/**
- *
- *
- * @param {*} options
- * @param {*} data
- * @return {*} 
- */
-function _getRequest(options, data, protocol) {
-    return new Promise((resolve, reject) => {
-        const { get } = (protocol === "https") ? require("https") : require("http");
-        return get(options, (res) => {
-            let result = '';
-            res.on('data', (chunk) => result += chunk);
-            res.on('end', () => resolve(JSON.parse(result)));
-        }).on('error', (err) => reject(err));
-    });
-}
 
 /**
  *
@@ -239,8 +253,8 @@ function _fetchWrite(request, options, localGitFileCacheUrl, _requireWriteImport
 }
 
 
-function _fetch() {
-    return fetch('https://example.com')
+function _fetch(url = 'https://www.google.com') {
+    return fetch(new URL(url))
         .then(res => {
             res.text()       // response body (=> Promise)
             res.json()       // parse response body (=> Promise)
