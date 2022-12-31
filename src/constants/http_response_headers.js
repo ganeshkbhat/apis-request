@@ -183,6 +183,7 @@ module.exports.RESPONSE_HEADERS = Object.freeze({
 module.exports.RESPONSE_HEADERS_CATEGORIZED = Object.freeze({
     // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
     // https://developer.mozilla.org/en-US/docs/Glossary/Request_header
+    // https://httpwg.org/specs/rfc9110.html#header.fields
     "AUTHENTICATION": {
         "WWW-AUTHENTICATE": "WWW-Authenticate",
         "AUTHORIZATION": "Authorization",
