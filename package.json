@@ -39,6 +39,7 @@
   "author": "Ganesh B",
   "license": "MIT",
   "dependencies": {
+    "concurrency.js": "^0.0.23-beta",
     "fast-xml-parser": "^4.0.12"
   }
 }
