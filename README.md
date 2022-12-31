@@ -19,6 +19,8 @@ reqApis.request("https://www.google.com");
 
 
 #### request
+Create a general `any` method request. Allows for handling connect, error, upgrade events specifically. Simple implementation and allows for request and response interceptor functions.
+
 
 Usage:
 
@@ -26,6 +28,8 @@ Usage:
 
 
 #### getRequest
+Create a get request. Allows for handling connect, error, upgrade events specifically. Simple implementation and allows for request and response interceptor functions.
+
 
 Usage:
 
@@ -35,6 +39,8 @@ Usage:
 
 
 #### postRequest
+Create a post request. Allows for handling connect, error, upgrade events specifically. Simple implementation and allows for request and response interceptor functions.
+
 
 Usage:
 
@@ -44,6 +50,8 @@ Usage:
 
 
 #### putRequest
+Create a put request. Allows for handling connect, error, upgrade events specifically. Simple implementation and allows for request and response interceptor functions.
+
 
 Usage:
 
@@ -53,6 +61,8 @@ Usage:
 
 
 #### patchRequest
+Create a patch request. Allows for handling connect, error, upgrade events specifically. Simple implementation and allows for request and response interceptor functions.
+
 
 `.patchRequest(options, data, protocol, connectHandler, errorHandler, upgradeHandler)`
 
@@ -60,6 +70,8 @@ Usage:
 
 
 #### deleteRequest
+Create a delete request. Allows for handling connect, error, upgrade events specifically. Simple implementation and allows for request and response interceptor functions.
+
 
 Usage:
 
