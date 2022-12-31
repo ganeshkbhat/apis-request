@@ -126,52 +126,6 @@ var post_options_xml_two = {
 }
 
 
-function httpsPost(options, postData, httpType = "http") {
-    // https://nodejs.org/dist/latest-v18.x/docs/api/https.html
-
-    return new Promise((resolve, reject) => {
-        var netHttp = (httpType == "http") ? require("http") : require("https");
-        options.agent = new netHttp.Agent(options) || false;
-        const req = netHttp.request({
-            method: 'POST',
-            ...options,
-        }, res => {
-            const chunks = [];
-
-            // res.setEncoding('utf8');
-            res.on('data', data => chunks.push(data))
-
-            res.on('end', () => {
-                let resBody = Buffer.concat(chunks);
-                switch (res.headers['content-type']) {
-                    case 'application/json':
-                        resBody = JSON.parse(resBody);
-                        break;
-                    case 'application/xml':
-                        const XML = require("fast-xml-parser");
-                        resBody = XML.parse(resBody);
-                        break;
-                    case 'text/html':
-                        resBody = resBody.toString();
-                        break;
-                    case 'text/plain':
-                        resBody = resBody.toString();
-                        break;
-                }
-                resolve(resBody);
-            })
-        });
-
-        req.on('error', reject);
-
-        if (!!postData) {
-            req.write(postData);
-        }
-
-        req.end();
-    })
-}
-
 let test_options = {
     protocol: "https:",
     hostname: 'google.com',
@@ -198,26 +152,3 @@ let r = httpsPost(options, "", "https");
 console.log(r.then(d => console.log(d.toString())));
 
 
-// const http2 = require('node:http2');
-// const fs = require('node:fs');
-// const client = http2.connect('https://localhost:8443', {
-//   ca: fs.readFileSync('localhost-cert.pem')
-// });
-// client.on('error', (err) => console.error(err));
-
-// const req = client.request({ ':path': '/' });
-
-// req.on('response', (headers, flags) => {
-//   for (const name in headers) {
-//     console.log(`${name}: ${headers[name]}`);
-//   }
-// });
-
-// req.setEncoding('utf8');
-// let data = '';
-// req.on('data', (chunk) => { data += chunk; });
-// req.on('end', () => {
-//   console.log(`\n${data}`);
-//   client.close();
-// });
-// req.end();
