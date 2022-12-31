@@ -65,7 +65,7 @@ Usage:
 
 `.deleteRequest(options, data, protocol, connectHandler, errorHandler, upgradeHandler)`
 
-`.deleteRequest(options, data, protocol)`
+`.deleteRequest(options)`
 
 
 
