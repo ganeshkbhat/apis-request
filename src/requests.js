@@ -54,7 +54,7 @@ function _getRequireOrImport(module_name) {
  * @param {*} data
  * @return {*} 
  */
-function _optionsRequest(options, data, protocol) {
+function _optionsRequest(options, data, protocol, connectHandler, errorHandler, upgradeHandler) {
     return _request({ ...options, method: METHODS.OPTIONS }, data, protocol, connectHandler, errorHandler, upgradeHandler);
 }
 
@@ -67,7 +67,7 @@ function _optionsRequest(options, data, protocol) {
  * @param {*} data
  * @return {*} 
  */
-function _deleteRequest(options, data, protocol) {
+function _deleteRequest(options, data, protocol, connectHandler, errorHandler, upgradeHandler) {
     return _request({ ...options, method: METHODS.DELETE }, data, protocol, connectHandler, errorHandler, upgradeHandler);
 }
 
@@ -79,7 +79,7 @@ function _deleteRequest(options, data, protocol) {
  * @param {*} data
  * @return {*} 
  */
-function _patchRequest(options, data, protocol) {
+function _patchRequest(options, data, protocol, connectHandler, errorHandler, upgradeHandler) {
     return _request({ ...options, method: METHODS.PATCH }, data, protocol, connectHandler, errorHandler, upgradeHandler);
 }
 
@@ -90,7 +90,7 @@ function _patchRequest(options, data, protocol) {
  * @param {*} data
  * @return {*} 
  */
-function _postRequest(options, data, protocol) {
+function _postRequest(options, data, protocol, connectHandler, errorHandler, upgradeHandler) {
     return _request({ ...options, method: METHODS.POST }, data, protocol, connectHandler, errorHandler, upgradeHandler);
 }
 
@@ -101,7 +101,7 @@ function _postRequest(options, data, protocol) {
  * @param {*} data
  * @return {*} 
  */
-function _putRequest(options, data, protocol) {
+function _putRequest(options, data, protocol, connectHandler, errorHandler, upgradeHandler) {
     return _request({ ...options, method: METHODS.PUT }, data, protocol, connectHandler, errorHandler, upgradeHandler);
 }
 
@@ -123,19 +123,19 @@ function _getRequest(options, data, protocol, connectHandler, errorHandler, upgr
  * @param {*} data
  * @return {*} 
  */
-function _request(options, data, protocol, httpType = "https", connectHandler = (res, socket, head) => { }, errorHandler = (e) => e, upgradeHandler = (res, socket, upgradeHead) => { socket.end(); process.exit(0); }) {
+function _request(options, data, protocol = "https", connectHandler = (res, socket, head) => { }, errorHandler = (e) => e, upgradeHandler = (res, socket, upgradeHead) => { socket.end(); process.exit(0); }) {
     return new Promise((resolve, reject) => {
         const querystring = require('querystring');
         var netHttp;
         
-        switch (httpType) {
-            case httpType === PROTOCOL_MODULES.HTTP:
+        switch (protocol) {
+            case protocol === PROTOCOL_MODULES.HTTP:
                 netHttp = require(PROTOCOL_MODULES.HTTP);
                 break;
-            case httpType === PROTOCOL_MODULES.HTTPS:
+            case protocol === PROTOCOL_MODULES.HTTPS:
                 netHttp = require(PROTOCOL_MODULES.HTTPS);
                 break;
-            case httpType === PROTOCOL_MODULES.HTTP2:
+            case protocol === PROTOCOL_MODULES.HTTP2:
                 netHttp = require(PROTOCOL_MODULES.HTTP2);
                 break;
         }
@@ -278,6 +278,13 @@ module.exports._putRequest = _putRequest;
 module.exports._patchRequest = _patchRequest;
 module.exports._request = _request;
 
+
+module.exports.deleteRequest = _deleteRequest;
+module.exports.getRequest = _getRequest;
+module.exports.postRequest = _postRequest;
+module.exports.putRequest = _putRequest;
+module.exports.patchRequest = _patchRequest;
+module.exports.request = _request;
 
 // Make http checks
 
