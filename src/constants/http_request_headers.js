@@ -181,6 +181,8 @@ module.exports.REQUEST_HEADERS = Object.freeze({
 });
 
 module.exports.REQUEST_HEADERS_CATEGORIZED = Object.freeze({
+    // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
+    // https://developer.mozilla.org/en-US/docs/Glossary/Request_header
     "AUTHENTICATION": {
         "WWW-AUTHENTICATE": "WWW-Authenticate",
         "AUTHORIZATION": "Authorization",
@@ -219,7 +221,7 @@ module.exports.REQUEST_HEADERS_CATEGORIZED = Object.freeze({
         "VIEWPORT-WIDTH": "Viewport-Width",
         "WIDTH": "Width"
     },
-    "NETWORK CLIENT HINTS": {
+    "NETWORK_CLIENT_HINTS": {
         "DOWNLINK": "Downlink",
         "ECT": "ECT",
         "RTT": "RTT",
@@ -239,9 +241,15 @@ module.exports.REQUEST_HEADERS_CATEGORIZED = Object.freeze({
         "KEEP-ALIVE": "Keep-Alive"
     },
     "CONTENT_NEGOTIATION": {
+        // https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation
         "ACCEPT": "Accept",
         "ACCEPT-ENCODING": "Accept-Encoding",
-        "ACCEPT-LANGUAGE": "Accept-Language"
+        "ACCEPT-LANGUAGE": "Accept-Language",
+        "VARY": "Vary",
+        "ACCEPT-POST": "Accept-Post",
+        "ACCEPT-PATCH": "Accept-Patch",
+        "ACCEPT-CH": "Accept-CH",
+        "ACCEPT-CH-LIFETIME": "Accept-CH-Lifetime"
     },
     "CONTROLS": {
         "EXCEPT": "Expect",
@@ -272,6 +280,20 @@ module.exports.REQUEST_HEADERS_CATEGORIZED = Object.freeze({
         "CONTENT-ENCODING": "Content-Encoding",
         "CONTENT-LANGUAGE": "Content-Language",
         "CONTENT-LOCATION": "Content-Location"
+    },
+    "REPRESENTATIONAL_HEADERS": {
+        // https://developer.mozilla.org/en-US/docs/Glossary/Representation_header
+        "CONTENT-TYPE": "Content-Type",
+        "CONTENT-ENCODING": "Content-Encoding",
+        "CONTENT-LANGUAGE": "Content-Language",
+        "CONTENT-LOCATION": "Content-Location"
+    },
+    "PAYLOAD_HEADER": {
+        // https://developer.mozilla.org/en-US/docs/Glossary/Payload_header
+        "CONTENT-LENGTH": "Content-Length",
+        "CONTENT-RANGE": "Content-Range",
+        "TRAILER": "Trailer",
+        "TRANSFER-ENCODING": "Transfer-Encoding"
     },
     "PROXIES": {
         "FORWARD": "Forwarded",
