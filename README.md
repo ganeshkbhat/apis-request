@@ -276,7 +276,7 @@ Is the url a valid url structure.
 ```
 
 
-#### DIFFERENT HTTP CONSTANTS
+### DIFFERENT HTTP CONSTANTS
 Different HTTP Constants associated to the package provided as an JS Object. Can be useful for testing/ automated testing purposes, etc.
 
 
