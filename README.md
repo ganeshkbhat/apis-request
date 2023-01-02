@@ -225,7 +225,7 @@ Response content handler function handling content-type of different types. Curr
 ```
 
 
-#### _checkHttpsProtocol
+#### checkHttpsProtocol
 Check and get type of protocol - http or https
 
 
