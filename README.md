@@ -24,7 +24,7 @@ Create a general `any` method request. Allows for handling connect, error, upgra
 
 Usage:
 
-`.request(options, data, protocol, connectHandler, errorHandler, upgradeHandler)`
+`.request(options, data, protocol, connectHandler, contentHandler, errorHandler, upgradeHandler)`
 
 
 ```
@@ -50,7 +50,7 @@ Create a get request. Allows for handling connect, error, upgrade events specifi
 
 Usage:
 
-`.getRequest(options, data, protocol, connectHandler, errorHandler, upgradeHandler)`
+`.getRequest(options, data, protocol, connectHandler, contentHandler, errorHandler, upgradeHandler)`
 
 `.getRequest(options)`
 
@@ -78,7 +78,7 @@ Create a post request. Allows for handling connect, error, upgrade events specif
 
 Usage:
 
-`.postRequest(options, data, protocol, connectHandler, errorHandler, upgradeHandler)`
+`.postRequest(options, data, protocol, connectHandler, contentHandler, errorHandler, upgradeHandler)`
 
 `.postRequest(options, data, protocol)`
 
@@ -106,7 +106,7 @@ Create a put request. Allows for handling connect, error, upgrade events specifi
 
 Usage:
 
-`.putRequest(options, data, protocol, connectHandler, errorHandler, upgradeHandler)`
+`.putRequest(options, data, protocol, connectHandler, contentHandler, errorHandler, upgradeHandler)`
 
 `.putRequest(options, data, protocol)`
 
@@ -130,7 +130,7 @@ Usage:
 Create a patch request. Allows for handling connect, error, upgrade events specifically. Simple implementation and allows for request and response interceptor functions.
 
 
-`.patchRequest(options, data, protocol, connectHandler, errorHandler, upgradeHandler)`
+`.patchRequest(options, data, protocol, connectHandler, contentHandler, errorHandler, upgradeHandler)`
 
 `.patchRequest(options, data, protocol)`
 
@@ -158,7 +158,7 @@ Create a delete request. Allows for handling connect, error, upgrade events spec
 
 Usage:
 
-`.deleteRequest(options, data, protocol, connectHandler, errorHandler, upgradeHandler)`
+`.deleteRequest(options, data, protocol, connectHandler, contentHandler, errorHandler, upgradeHandler)`
 
 `.deleteRequest(options)`
 
@@ -185,7 +185,7 @@ Create a options request. Allows for handling connect, error, upgrade events spe
 
 Usage:
 
-`.optionsRequest(options, data, protocol, connectHandler, errorHandler, upgradeHandler)`
+`.optionsRequest(options, data, protocol, connectHandler, contentHandler, errorHandler, upgradeHandler)`
 
 `.optionsRequest(options)`
 
