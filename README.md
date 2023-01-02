@@ -15,7 +15,7 @@ reqApis.request("https://www.google.com");
 ```
 
 
-## Other APIs:
+## All request-apis Methods:
 
 
 #### request
@@ -25,6 +25,7 @@ Create a general `any` method request. Allows for handling connect, error, upgra
 Usage:
 
 `.request(options, data, protocol, connectHandler, errorHandler, upgradeHandler)`
+
 
 
 #### getRequest
@@ -38,6 +39,7 @@ Usage:
 `.getRequest(options)`
 
 
+
 #### postRequest
 Create a post request. Allows for handling connect, error, upgrade events specifically. Simple implementation and allows for request and response interceptor functions.
 
@@ -47,6 +49,7 @@ Usage:
 `.postRequest(options, data, protocol, connectHandler, errorHandler, upgradeHandler)`
 
 `.postRequest(options, data, protocol)`
+
 
 
 #### putRequest
@@ -60,6 +63,7 @@ Usage:
 `.putRequest(options, data, protocol)`
 
 
+
 #### patchRequest
 Create a patch request. Allows for handling connect, error, upgrade events specifically. Simple implementation and allows for request and response interceptor functions.
 
@@ -67,6 +71,7 @@ Create a patch request. Allows for handling connect, error, upgrade events speci
 `.patchRequest(options, data, protocol, connectHandler, errorHandler, upgradeHandler)`
 
 `.patchRequest(options, data, protocol)`
+
 
 
 #### deleteRequest
