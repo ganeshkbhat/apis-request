@@ -116,6 +116,35 @@ function _getRequest(options, data, protocol, connectHandler, errorHandler, upgr
     return _request({ ...options, method: METHODS.GET }, data, protocol, connectHandler, errorHandler, upgradeHandler);
 }
 
+
+/**
+ * Different contentTypeHandler Handlers
+ * 
+ * @param {*} res
+ * @param {*} resBody
+ * @return {*} 
+ */
+function contentTypeHandler(res, resBody) {
+    switch (res.headers['content-type']) {
+        case 'application/json':
+            resBody = JSON.parse(resBody);
+            break;
+        case 'application/xml':
+            const XML = require("fast-xml-parser").XMLParser;
+            let parser = new XML();
+            resBody = parser.parse(resBody);
+            break;
+        case 'text/html':
+            resBody = resBody.toString();
+            break;
+        case 'text/plain':
+            resBody = resBody.toString();
+            break;
+    }
+    return { headers: res.headers, body: resBody }
+}
+
+
 /**
  *
  *
@@ -123,23 +152,10 @@ function _getRequest(options, data, protocol, connectHandler, errorHandler, upgr
  * @param {*} data
  * @return {*} 
  */
-function _request(options, postData, protocol = "https", connectHandler = (res, socket, head) => { }, errorHandler = (e) => e, upgradeHandler = (res, socket, upgradeHead) => { socket.end(); process.exit(0); }) {
+function _request(options, postData, protocol = "https", connectHandler = (res, socket, head) => { }, contentHandler = contentTypeHandler, errorHandler = (e) => e, upgradeHandler = (res, socket, upgradeHead) => { socket.end(); process.exit(0); }) {
     return new Promise((resolve, reject) => {
         const querystring = require('querystring');
         var netHttp = (protocol === "https") ? require(PROTOCOL_NODE_MODULES.HTTPS) : (protocol === "http") ? require(PROTOCOL_NODE_MODULES.HTTP) : require(PROTOCOL_NODE_MODULES.HTTP2);
-        
-        // switch (protocol) {
-        //     case protocol === PROTOCOL_NODE_MODULES.HTTP:
-        //         netHttp = require(PROTOCOL_NODE_MODULES.HTTP);
-        //         break;
-        //     case protocol === PROTOCOL_NODE_MODULES.HTTPS:
-        //         netHttp = require(PROTOCOL_NODE_MODULES.HTTPS);
-        //         break;
-        //     case protocol === PROTOCOL_NODE_MODULES.HTTP2:
-        //         netHttp = require(PROTOCOL_NODE_MODULES.HTTP2);
-        //         break;
-        // }
-        
         options.agent = new netHttp.Agent(options) || false;
 
         const req = netHttp.request({ method: 'GET', ...options }, res => {
@@ -148,23 +164,8 @@ function _request(options, postData, protocol = "https", connectHandler = (res, 
             res.on('data', data => chunks.push(data));
             res.on('end', () => {
                 let resBody = Buffer.concat(chunks);
-                switch (res.headers['content-type']) {
-                    case 'application/json':
-                        resBody = JSON.parse(resBody);
-                        break;
-                    case 'application/xml':
-                        const XML = require("fast-xml-parser").XMLParser;
-                        let parser = new XML();
-                        resBody = parser.parse(resBody);
-                        break;
-                    case 'text/html':
-                        resBody = resBody.toString();
-                        break;
-                    case 'text/plain':
-                        resBody = resBody.toString();
-                        break;
-                }
-                resolve({headers: res.headers, body: resBody});
+                let response = (!!contentHandler) ? contentHandler(res, resBody) : { headers: res.headers, body: resBody };
+                resolve(response);
             });
         });
 
@@ -173,9 +174,13 @@ function _request(options, postData, protocol = "https", connectHandler = (res, 
         req.on('upgrade', upgradeHandler);
 
         if (!!postData) {
-            // req.write(querystring.escape(JSON.stringify(postData)));
-            let pdata = (typeof postData === "object") ? JSON.stringify(postData) : postData.toString();
-            req.write(pdata);
+            if (typeof postData !== "string") {
+                // req.write(querystring.escape(JSON.stringify(postData)));
+                let pdata = (typeof postData === "object") ? JSON.stringify(postData) : postData.toString();
+                req.write(pdata);
+            } else {
+                req.write(postData);
+            }
         }
         req.end();
     });
