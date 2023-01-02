@@ -120,7 +120,7 @@ Usage:
  * @param {*} connectHandler
  * @param {*} errorHandler
  * @param {*} upgradeHandler
- * @return {*} 
+ * @return {*} Promise: resolve<{ headers, body }>, reject <{ error }>
  * 
  */
 ```
