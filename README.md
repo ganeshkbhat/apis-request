@@ -118,6 +118,7 @@ Usage:
  * @param {*} data
  * @param {*} protocol
  * @param {*} connectHandler
+ * @param {*} contentHandler
  * @param {*} errorHandler
  * @param {*} upgradeHandler
  * @return {*} Promise: resolve<{ headers, body }>, reject <{ error }>
