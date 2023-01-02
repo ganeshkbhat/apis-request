@@ -280,39 +280,58 @@ Is the url a valid url structure.
 Different HTTP Constants associated to the package provided as an JS Object. Can be useful for testing/ automated testing purposes, etc.
 
 
+##### REQUEST_HEADERS
+List of Different HTTP Request headers for HTTP
+
+
 `require("request-apis").constants.REQUEST_HEADERS`
 
-List of Different HTTP Request headers for HTTP
+
+
+##### REQUEST_HEADERS_CATEGORIZED
+List of Different HTTP Request headers categorized for HTTP
 
 
 `require("request-apis").constants.REQUEST_HEADERS_CATEGORIZED`
 
-List of Different HTTP Request headers categorized for HTTP
+
+##### RESPONSE_HEADERS
+List of Different HTTP Response headers for HTTP
 
 
 `require("request-apis").constants.RESPONSE_HEADERS`
 
-List of Different HTTP Response headers for HTTP
+
+
+##### RESPONSE_HEADERS_CATEGORIZED
+List of Different HTTP Response headers categorized for HTTP
 
 
 `require("request-apis").constants.RESPONSE_HEADERS_CATEGORIZED`
 
-List of Different HTTP Response headers categorized for HTTP
+
+
+##### PROTOCOLS
+List of Different HTTP Protocols for Node.js - `http`, `https`
 
 
 `require("request-apis").constants.PROTOCOLS`
 
-List of Different HTTP Protocols for Node.js - `http`, `https`
+
+
+##### PROTOCOL_NODE_MODULES
+List of Different HTTP Node Modules for Node.js - `http`, `https`, `http2`
 
 
 `require("request-apis").constants.PROTOCOL_NODE_MODULES`
 
-List of Different HTTP Node Modules for Node.js - `http`, `https`, `http2`
+
+
+##### CONTENT_TYPE
+List of Different HTTP Content Type value options for HTTP
 
 
 `require("request-apis").constants.CONTENT_TYPE`
-
-List of Different HTTP Content Type value options for HTTP
 
 
 
