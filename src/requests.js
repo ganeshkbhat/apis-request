@@ -123,23 +123,23 @@ function _getRequest(options, data, protocol, connectHandler, errorHandler, upgr
  * @param {*} data
  * @return {*} 
  */
-function _request(options, data, protocol = "https", connectHandler = (res, socket, head) => { }, errorHandler = (e) => e, upgradeHandler = (res, socket, upgradeHead) => { socket.end(); process.exit(0); }) {
+function _request(options, postData, protocol = "https", connectHandler = (res, socket, head) => { }, errorHandler = (e) => e, upgradeHandler = (res, socket, upgradeHead) => { socket.end(); process.exit(0); }) {
     return new Promise((resolve, reject) => {
         const querystring = require('querystring');
-        var netHttp;
+        var netHttp = (protocol === "https") ? require(PROTOCOL_NODE_MODULES.HTTPS) : (protocol === "http") ? require(PROTOCOL_NODE_MODULES.HTTP) : require(PROTOCOL_NODE_MODULES.HTTP2);
         
-        switch (protocol) {
-            case protocol === PROTOCOL_MODULES.HTTP:
-                netHttp = require(PROTOCOL_MODULES.HTTP);
-                break;
-            case protocol === PROTOCOL_MODULES.HTTPS:
-                netHttp = require(PROTOCOL_MODULES.HTTPS);
-                break;
-            case protocol === PROTOCOL_MODULES.HTTP2:
-                netHttp = require(PROTOCOL_MODULES.HTTP2);
-                break;
-        }
-
+        // switch (protocol) {
+        //     case protocol === PROTOCOL_NODE_MODULES.HTTP:
+        //         netHttp = require(PROTOCOL_NODE_MODULES.HTTP);
+        //         break;
+        //     case protocol === PROTOCOL_NODE_MODULES.HTTPS:
+        //         netHttp = require(PROTOCOL_NODE_MODULES.HTTPS);
+        //         break;
+        //     case protocol === PROTOCOL_NODE_MODULES.HTTP2:
+        //         netHttp = require(PROTOCOL_NODE_MODULES.HTTP2);
+        //         break;
+        // }
+        
         options.agent = new netHttp.Agent(options) || false;
 
         const req = netHttp.request({ method: 'GET', ...options }, res => {
@@ -153,8 +153,9 @@ function _request(options, data, protocol = "https", connectHandler = (res, sock
                         resBody = JSON.parse(resBody);
                         break;
                     case 'application/xml':
-                        const XML = require("fast-xml-parser");
-                        resBody = XML.parse(resBody);
+                        const XML = require("fast-xml-parser").XMLParser;
+                        let parser = new XML();
+                        resBody = parser.parse(resBody);
                         break;
                     case 'text/html':
                         resBody = resBody.toString();
@@ -163,7 +164,7 @@ function _request(options, data, protocol = "https", connectHandler = (res, sock
                         resBody = resBody.toString();
                         break;
                 }
-                resolve(resBody);
+                resolve({headers: res.headers, body: resBody});
             });
         });
 
@@ -173,7 +174,8 @@ function _request(options, data, protocol = "https", connectHandler = (res, sock
 
         if (!!postData) {
             // req.write(querystring.escape(JSON.stringify(postData)));
-            req.write(postData);
+            let pdata = (typeof postData === "object") ? JSON.stringify(postData) : postData.toString();
+            req.write(pdata);
         }
         req.end();
     });
