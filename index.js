@@ -17,11 +17,18 @@
 'use strict';
 
 
-const { 
-    _isValidURL, _getProtocol, _checkHttpsProtocol, _fetch, _getRequireOrImport,
+const {
+    _isValidURL, _getProtocol, _checkHttpsProtocol,
+    isValidURL, getProtocol, checkHttpsProtocol,
+    _fetch, _getRequireOrImport,
     _deleteRequest, _getRequest, _postRequest, _putRequest, _patchRequest, _request,
     deleteRequest, getRequest, postRequest, putRequest, patchRequest, request
- } = require("./src/requests.js");
+} = require("./src/requests.js");
+
+const { CONTENT_TYPE } = require("./src/constants/content_types");
+const { PROTOCOLS, PROTOCOL_NODE_MODULES } = require("./src/constants/http_protocols");
+const { REQUEST_HEADERS, REQUEST_HEADERS_CATEGORIZED } = require("./src/constants/http_request_headers");
+const { RESPONSE_HEADERS, RESPONSE_HEADERS_CATEGORIZED } = require("./src/constants/http_response_headers");
 
 
 // Make requests
@@ -45,6 +52,13 @@ module.exports.request = request;
 module.exports._isValidURL = _isValidURL;
 module.exports._getProtocol = _getProtocol;
 module.exports._checkHttpsProtocol = _checkHttpsProtocol;
+
+module.exports.isValidURL = isValidURL;
+module.exports.getProtocol = getProtocol;
+module.exports.checkHttpsProtocol = checkHttpsProtocol;
+
+
 module.exports._fetch = _fetch;
 module.exports._getRequireOrImport = _getRequireOrImport;
 
+module.exports.constants = { CONTENT_TYPE, PROTOCOLS, PROTOCOL_NODE_MODULES, REQUEST_HEADERS, REQUEST_HEADERS_CATEGORIZED, RESPONSE_HEADERS, RESPONSE_HEADERS_CATEGORIZED };

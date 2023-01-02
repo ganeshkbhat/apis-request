@@ -27,6 +27,22 @@ Usage:
 `.request(options, data, protocol, connectHandler, errorHandler, upgradeHandler)`
 
 
+```
+/**
+ *
+ *
+ * @param {*} options
+ * @param {*} data
+ * @param {*} protocol
+ * @param {*} connectHandler
+ * @param {*} contentHandler
+ * @param {*} errorHandler
+ * @param {*} upgradeHandler
+ * @return {*} Promise: resolve<{ headers, body }>, reject <{ error }> 
+ * 
+ */
+```
+
 
 #### getRequest
 Create a get request. Allows for handling connect, error, upgrade events specifically. Simple implementation and allows for request and response interceptor functions.
@@ -38,6 +54,22 @@ Usage:
 
 `.getRequest(options)`
 
+
+```
+/**
+ *
+ *
+ * @param {*} options
+ * @param {*} data
+ * @param {*} protocol
+ * @param {*} connectHandler
+ * @param {*} contentHandler
+ * @param {*} errorHandler
+ * @param {*} upgradeHandler
+ * @return {*} Promise: resolve<{ headers, body }>, reject <{ error }> 
+ * 
+ */
+```
 
 
 #### postRequest
@@ -51,6 +83,22 @@ Usage:
 `.postRequest(options, data, protocol)`
 
 
+```
+/**
+ *
+ *
+ * @param {*} options
+ * @param {*} data
+ * @param {*} protocol
+ * @param {*} connectHandler
+ * @param {*} contentHandler
+ * @param {*} errorHandler
+ * @param {*} upgradeHandler
+ * @return {*} Promise: resolve<{ headers, body }>, reject <{ error }> 
+ * 
+ */
+```
+
 
 #### putRequest
 Create a put request. Allows for handling connect, error, upgrade events specifically. Simple implementation and allows for request and response interceptor functions.
@@ -63,6 +111,20 @@ Usage:
 `.putRequest(options, data, protocol)`
 
 
+```
+/**
+ *
+ * @param {*} options
+ * @param {*} data
+ * @param {*} protocol
+ * @param {*} connectHandler
+ * @param {*} errorHandler
+ * @param {*} upgradeHandler
+ * @return {*} 
+ * 
+ */
+```
+
 
 #### patchRequest
 Create a patch request. Allows for handling connect, error, upgrade events specifically. Simple implementation and allows for request and response interceptor functions.
@@ -72,6 +134,22 @@ Create a patch request. Allows for handling connect, error, upgrade events speci
 
 `.patchRequest(options, data, protocol)`
 
+
+```
+/**
+ *
+ *
+ * @param {*} options
+ * @param {*} data
+ * @param {*} protocol
+ * @param {*} connectHandler
+ * @param {*} contentHandler
+ * @param {*} errorHandler
+ * @param {*} upgradeHandler
+ * @return {*} Promise: resolve<{ headers, body }>, reject <{ error }> 
+ * 
+ */
+```
 
 
 #### deleteRequest
@@ -83,6 +161,158 @@ Usage:
 `.deleteRequest(options, data, protocol, connectHandler, errorHandler, upgradeHandler)`
 
 `.deleteRequest(options)`
+
+
+```
+/**
+ *
+ * @param {*} options
+ * @param {*} data
+ * @param {*} protocol
+ * @param {*} connectHandler
+ * @param {*} contentHandler
+ * @param {*} errorHandler
+ * @param {*} upgradeHandler
+ * @return {*} Promise: resolve<{ headers, body }>, reject <{ error }> 
+ * 
+ */
+```
+
+
+#### optionsRequest
+Create a options request. Allows for handling connect, error, upgrade events specifically. Simple implementation and allows for request and response interceptor functions.
+
+
+Usage:
+
+`.optionsRequest(options, data, protocol, connectHandler, errorHandler, upgradeHandler)`
+
+`.optionsRequest(options)`
+
+
+```
+/**
+ *
+ *
+ * @param {*} options
+ * @param {*} data
+ * @param {*} protocol
+ * @param {*} connectHandler
+ * @param {*} contentHandler
+ * @param {*} errorHandler
+ * @param {*} upgradeHandler
+ * @return {*} Promise: resolve<{ headers, body }>, reject <{ error }> 
+ * 
+ */
+```
+
+
+#### contentTypeHandler
+Response content handler function handling content-type of different types. Currently has application/json, application/xml handlers. Parses the `'content-type': 'application/json'` like headers from res.headers
+
+
+.contentTypeHandler(responseObject, responseBody)
+
+
+```
+/**
+ * Different contentTypeHandler Handlers
+ * 
+ * @param {*} responseObject
+ * @param {*} responseBody
+ * @return { headers, body }
+ */
+```
+
+
+#### _checkHttpsProtocol
+Check and get type of protocol - http or https
+
+
+`.checkHttpsProtocol(url)`
+
+
+```
+/**
+ *
+ * @param {*} url
+ * @return {*} Boolean
+ * 
+ */
+```
+
+
+#### getProtocol
+Check and Get the protocol of the url.
+
+
+`.getProtocol(url)`
+
+
+```
+/**
+ *
+ * @param {*} url
+ * @return {*} Boolean
+ * 
+ */
+```
+
+
+#### isValidURL
+Is the url a valid url structure.
+
+
+`.isValidURL(url)`
+
+
+```
+/**
+ *
+ * @param {*} url
+ * @return {*} Boolean
+ * 
+ */
+```
+
+
+#### DIFFERENT HTTP CONSTANTS
+Different HTTP Constants associated to the package provided as an JS Object.
+
+
+`require("request-apis").constants.REQUEST_HEADERS`
+
+List of Different HTTP Request headers for HTTP
+
+
+`require("request-apis").constants.REQUEST_HEADERS_CATEGORIZED`
+
+List of Different HTTP Request headers categorized for HTTP
+
+
+`require("request-apis").constants.RESPONSE_HEADERS`
+
+List of Different HTTP Response headers for HTTP
+
+
+`require("request-apis").constants.RESPONSE_HEADERS_CATEGORIZED`
+
+List of Different HTTP Response headers categorized for HTTP
+
+
+`require("request-apis").constants.PROTOCOLS`
+
+List of Different HTTP Protocols for Node.js - `http`, `https`
+
+
+`require("request-apis").constants.PROTOCOL_NODE_MODULES`
+
+List of Different HTTP Node Modules for Node.js - `http`, `https`, `http2`
+
+
+`require("request-apis").constants.CONTENT_TYPE`
+
+List of Different HTTP Content Type value options for HTTP
 
 
 

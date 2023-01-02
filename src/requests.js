@@ -45,42 +45,20 @@ function _getRequireOrImport(module_name) {
     return require(module_name);
 }
 
-
-
 /**
  *
  *
  * @param {*} options
  * @param {*} data
- * @return {*} 
+ * @param {*} protocol
+ * @param {*} connectHandler
+ * @param {*} contentHandler
+ * @param {*} errorHandler
+ * @param {*} upgradeHandler
+ * @return {*} Promise: resolve<{ headers, body }>, reject <{ error }> 
  */
-function _optionsRequest(options, data, protocol, connectHandler, errorHandler, upgradeHandler) {
-    return _request({ ...options, method: METHODS.OPTIONS }, data, protocol, connectHandler, errorHandler, upgradeHandler);
-}
-
-
-
-/**
- *
- *
- * @param {*} options
- * @param {*} data
- * @return {*} 
- */
-function _deleteRequest(options, data, protocol, connectHandler, errorHandler, upgradeHandler) {
-    return _request({ ...options, method: METHODS.DELETE }, data, protocol, connectHandler, errorHandler, upgradeHandler);
-}
-
-
-/**
- *
- *
- * @param {*} options
- * @param {*} data
- * @return {*} 
- */
-function _patchRequest(options, data, protocol, connectHandler, errorHandler, upgradeHandler) {
-    return _request({ ...options, method: METHODS.PATCH }, data, protocol, connectHandler, errorHandler, upgradeHandler);
+function _optionsRequest(options, data, protocol, connectHandler, contentHandler, errorHandler, upgradeHandler) {
+    return _request({ ...options, method: METHODS.OPTIONS }, data, protocol, connectHandler, contentHandler, errorHandler, upgradeHandler);
 }
 
 /**
@@ -88,10 +66,15 @@ function _patchRequest(options, data, protocol, connectHandler, errorHandler, up
  *
  * @param {*} options
  * @param {*} data
- * @return {*} 
+ * @param {*} protocol
+ * @param {*} connectHandler
+ * @param {*} contentHandler
+ * @param {*} errorHandler
+ * @param {*} upgradeHandler
+ * @return {*} Promise: resolve<{ headers, body }>, reject <{ error }> 
  */
-function _postRequest(options, data, protocol, connectHandler, errorHandler, upgradeHandler) {
-    return _request({ ...options, method: METHODS.POST }, data, protocol, connectHandler, errorHandler, upgradeHandler);
+function _deleteRequest(options, data, protocol, connectHandler, contentHandler, errorHandler, upgradeHandler) {
+    return _request({ ...options, method: METHODS.DELETE }, data, protocol, connectHandler, contentHandler, errorHandler, upgradeHandler);
 }
 
 /**
@@ -99,10 +82,15 @@ function _postRequest(options, data, protocol, connectHandler, errorHandler, upg
  *
  * @param {*} options
  * @param {*} data
- * @return {*} 
+ * @param {*} protocol
+ * @param {*} connectHandler
+ * @param {*} contentHandler
+ * @param {*} errorHandler
+ * @param {*} upgradeHandler
+ * @return {*} Promise: resolve<{ headers, body }>, reject <{ error }> 
  */
-function _putRequest(options, data, protocol, connectHandler, errorHandler, upgradeHandler) {
-    return _request({ ...options, method: METHODS.PUT }, data, protocol, connectHandler, errorHandler, upgradeHandler);
+function _patchRequest(options, data, protocol, connectHandler, contentHandler, errorHandler, upgradeHandler) {
+    return _request({ ...options, method: METHODS.PATCH }, data, protocol, connectHandler, contentHandler, errorHandler, upgradeHandler);
 }
 
 /**
@@ -110,21 +98,58 @@ function _putRequest(options, data, protocol, connectHandler, errorHandler, upgr
  *
  * @param {*} options
  * @param {*} data
- * @return {*} 
+ * @param {*} protocol
+ * @param {*} connectHandler
+ * @param {*} contentHandler
+ * @param {*} errorHandler
+ * @param {*} upgradeHandler
+ * @return {*} Promise: resolve<{ headers, body }>, reject <{ error }> 
  */
-function _getRequest(options, data, protocol, connectHandler, errorHandler, upgradeHandler) {
-    return _request({ ...options, method: METHODS.GET }, data, protocol, connectHandler, errorHandler, upgradeHandler);
+function _postRequest(options, data, protocol, connectHandler, contentHandler, errorHandler, upgradeHandler) {
+    return _request({ ...options, method: METHODS.POST }, data, protocol, connectHandler, contentHandler, errorHandler, upgradeHandler);
+}
+
+/**
+ *
+ *
+ * @param {*} options
+ * @param {*} data
+ * @param {*} protocol
+ * @param {*} connectHandler
+ * @param {*} contentHandler
+ * @param {*} errorHandler
+ * @param {*} upgradeHandler
+ * @return {*} Promise: resolve<{ headers, body }>, reject <{ error }>
+ */
+function _putRequest(options, data, protocol, connectHandler, contentHandler, errorHandler, upgradeHandler) {
+    return _request({ ...options, method: METHODS.PUT }, data, protocol, connectHandler, contentHandler, errorHandler, upgradeHandler);
+}
+
+/**
+ *
+ *
+ * @param {*} options
+ * @param {*} data
+ * @param {*} protocol
+ * @param {*} connectHandler
+ * @param {*} contentHandler
+ * @param {*} errorHandler
+ * @param {*} upgradeHandler
+ * @return {*} Promise: resolve<{ headers, body }>, reject <{ error }> 
+ */
+function _getRequest(options, data, protocol, connectHandler, contentHandler, errorHandler, upgradeHandler) {
+    return _request({ ...options, method: METHODS.GET }, data, protocol, connectHandler, contentHandler, errorHandler, upgradeHandler);
 }
 
 
 /**
  * Different contentTypeHandler Handlers
  * 
- * @param {*} res
- * @param {*} resBody
- * @return {*} 
+ * @param {*} responseObject
+ * @param {*} responseBody
+ * @return { headers, body }
  */
-function contentTypeHandler(res, resBody) {
+function contentTypeHandler(responseObject, responseBody) {
     switch (res.headers['content-type']) {
         case 'application/json':
             resBody = JSON.parse(resBody);
@@ -149,8 +174,13 @@ function contentTypeHandler(res, resBody) {
  *
  *
  * @param {*} options
- * @param {*} data
- * @return {*} 
+ * @param {*} postData
+ * @param {string} [protocol="https"]
+ * @param {*} [connectHandler=(res, socket, head) => { }]
+ * @param {*} [contentHandler=contentTypeHandler]
+ * @param {*} [errorHandler=(e) => e]
+ * @param {*} [upgradeHandler=(res, socket, upgradeHead) => { socket.end(); process.exit(0); }]
+ * @return {*} Promise: resolve<{ headers, body }>, reject <{ error }>
  */
 function _request(options, postData, protocol = "https", connectHandler = (res, socket, head) => { }, contentHandler = contentTypeHandler, errorHandler = (e) => e, upgradeHandler = (res, socket, upgradeHead) => { socket.end(); process.exit(0); }) {
     return new Promise((resolve, reject) => {
@@ -191,7 +221,7 @@ function _request(options, postData, protocol = "https", connectHandler = (res, 
  *
  *
  * @param {*} url
- * @return {*} 
+ * @return {*} Boolean
  */
 function _checkHttpsProtocol(url) {
     try {
@@ -206,7 +236,7 @@ function _checkHttpsProtocol(url) {
  *
  *
  * @param {*} url
- * @return {*} 
+ * @return {*} Boolean
  */
 function _getProtocol(url) {
     try {
@@ -232,7 +262,7 @@ function _getProtocol(url) {
  *
  *
  * @param {*} url
- * @return {*} 
+ * @return {*} Boolean
  */
 function _isValidURL(url) {
     try {
@@ -298,6 +328,12 @@ module.exports.request = _request;
 module.exports._isValidURL = _isValidURL;
 module.exports._getProtocol = _getProtocol;
 module.exports._checkHttpsProtocol = _checkHttpsProtocol;
+
+module.exports.isValidURL = _isValidURL;
+module.exports.getProtocol = _getProtocol;
+module.exports.checkHttpsProtocol = _checkHttpsProtocol;
+
+
 module.exports._fetchWrite = _fetchWrite;
 module.exports._fetch = _fetch;
 module.exports._getRequireOrImport = _getRequireOrImport;

@@ -16,15 +16,21 @@
 
 'use strict';
 
-import { 
-    _isValidURL, _getProtocol, _checkHttpsProtocol, _fetch, _getRequireOrImport,
+import {
+    _isValidURL, _getProtocol, _checkHttpsProtocol,
+    isValidURL, getProtocol, checkHttpsProtocol,
+    _fetch, _getRequireOrImport,
     _deleteRequest, _getRequest, _postRequest, _putRequest, _patchRequest, _request,
-    deleteRequest, getRequest, postRequest, putRequest, patchRequest, request
- } from "./index.js";
+    deleteRequest, getRequest, postRequest, putRequest, patchRequest, request,
+    constants
+} from "./index.js";
 
 export default _request;
-export { 
-    _isValidURL, _getProtocol, _checkHttpsProtocol, _fetch, _getRequireOrImport,
+export {
+    _isValidURL, _getProtocol, _checkHttpsProtocol,
+    isValidURL, getProtocol, checkHttpsProtocol,
+    _fetch, _getRequireOrImport,
     _deleteRequest, _getRequest, _postRequest, _putRequest, _patchRequest, _request,
-    deleteRequest, getRequest, postRequest, putRequest, patchRequest, request
- };
+    deleteRequest, getRequest, postRequest, putRequest, patchRequest, request,
+    constants
+};
