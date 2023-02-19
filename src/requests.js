@@ -20,7 +20,7 @@
 const path = require("path");
 const fs = require('fs');
 const METHODS = require("./constants/methods").METHODS;
-const PROTOCOLS = require("./constants/http_protocols").PROTOCOLS;
+const HTTP_PROTOCOLS = require("./constants/http_protocols").HTTP_PROTOCOLS;
 const PROTOCOL_NODE_MODULES = require("./constants/http_protocols").PROTOCOL_NODE_MODULES;
 
 
@@ -150,23 +150,23 @@ function _getRequest(options, data, protocol, connectHandler, contentHandler, er
  * @return { headers, body }
  */
 function contentTypeHandler(responseObject, responseBody) {
-    switch (res.headers['content-type']) {
+    switch (responseObject.headers['content-type']) {
         case 'application/json':
-            resBody = JSON.parse(resBody);
+            responseBody = JSON.parse(responseBody);
             break;
         case 'application/xml':
             const XML = require("fast-xml-parser").XMLParser;
             let parser = new XML();
-            resBody = parser.parse(resBody);
+            responseBody = parser.parse(responseBody);
             break;
         case 'text/html':
-            resBody = resBody.toString();
+            responseBody = responseBody.toString();
             break;
         case 'text/plain':
-            resBody = resBody.toString();
+            responseBody = responseBody.toString();
             break;
     }
-    return { headers: res.headers, body: resBody }
+    return { headers: responseObject.headers, body: responseBody }
 }
 
 
@@ -322,6 +322,7 @@ module.exports.postRequest = _postRequest;
 module.exports.putRequest = _putRequest;
 module.exports.patchRequest = _patchRequest;
 module.exports.request = _request;
+
 
 // Make http checks
 
