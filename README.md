@@ -7,10 +7,21 @@ Find the demos in the [demos folder](./demos)
 ## Usage:
 
 
+Using `request` function using request-apis package
+
 ```
 
 const reqApis = require("request-apis");
-reqApis.request("https://www.google.com");
+reqApis.request("https://www.google.com").then(r => r.text()).then(r => console.log(r));
+
+```
+
+Using `_fetch` function using request-apis package
+
+```
+
+const reqApis = require("request-apis");
+reqApis._fetch("https://www.google.com", "text").then(r => console.log(r));
 
 ```
 
