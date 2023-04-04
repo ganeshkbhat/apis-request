@@ -290,21 +290,77 @@ function _fetchWrite(request, options, localGitFileCacheUrl, _requireWriteImport
 }
 
 
-function _fetch(url = 'https://www.google.com') {
-    return fetch(new URL(url))
-        .then(res => {
-            res.text()       // response body (=> Promise)
-            res.json()       // parse response body (=> Promise)
-            res.status       //=> 200
-            res.statusText   //=> 'OK'
-            res.redirected   //=> false
-            res.ok           //=> true
-            res.url          //=> 'https://new.example.com'
-            res.type         //=> 'basic'
-            //   ('cors' 'default' 'error'
-            //    'opaque' 'opaqueredirect')
-            res.headers.get('Content-Type')
-        })
+/**
+ *
+ *
+ * @param {*} response
+ * @param {*} transform
+ * @param {string} [transformOptions={ delimiter: ",", comment: "#", columns: true, skip_empty_lines: true }]
+ * @return {*} 
+ */
+function transformFetchResponse(response, transform, transformOptions = { delimiter: ",", comment: "#", columns: true, skip_empty_lines: true }) {
+    let func = (res, options) => res.text();
+    if (transform === "json") {
+        func = (res, options) => res.json();
+    } else if (transform === "xml") {
+        func = (res, options) => {
+            let txt = res.text();
+            return require('xml-js').xml2json(txt);
+        }
+    } else if (transform === "yml") {
+        func = (res, options) => {
+            let txt = res.text();
+            return require('yaml').parse(txt);
+        }
+    } else if (transform === "ini") {
+        func = (res, options) => {
+            let txt = res.text();
+            return require('ini').parse(txt);
+        }
+    } else if (transform === "csv") {
+        func = (res, options) => {
+            let txt = res.text();
+            return require('csv-parse/sync').parse(txt, { ...options });
+        }
+    } else if (transform === "dotenv") {
+        func = (res, options) => {
+            let txt = res.text();
+            return require('dotenv').config(Buffer.from(txt));
+        }
+    } else if (transform === "dotenv") {
+        func = (res, options) => {
+            let txt = res.text();
+            return require('dotenv').config(Buffer.from(txt));
+        }
+    }
+    return func(response, transformOptions);
+}
+
+
+/**
+ *
+ *
+ * @param {string} [url]
+ * @param {string} [transform="text"]
+ * @param {*} transformOptions
+ * @return {*} 
+ */
+function _fetch(url, transform = "text", transformOptions) {
+    return fetch(new URL(url)).then(res => transformFetchResponse(res, transform, transformOptions));
+
+    // .then(res => {
+    //     res.text()       // response body (=> Promise)
+    //     res.json()       // parse response body (=> Promise)
+    //     res.status       //=> 200
+    //     res.statusText   //=> 'OK'
+    //     res.redirected   //=> false
+    //     res.ok           //=> true
+    //     res.url          //=> 'https://new.example.com'
+    //     res.type         //=> 'basic'
+    //     //   ('cors' 'default' 'error'
+    //     //    'opaque' 'opaqueredirect')
+    //     res.headers.get('Content-Type')
+    // })
 }
 
 
