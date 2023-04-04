@@ -46,7 +46,6 @@ module.exports.postRequest = postRequest;
 module.exports.putRequest = putRequest;
 module.exports.patchRequest = patchRequest;
 module.exports.request = request;
-module.exports.fetch = _fetch;
 
 
 // Make http checks
