@@ -45,8 +45,19 @@ function _getRequireOrImport(module_name) {
     return require(module_name);
 }
 
+
+let textResponseTransformer = (res, options) => res.text();
+let jsonResponseTransformer = (res, options) => res.json();
+let xmlResponseTransformer = (res, options) => require('xml-js').xml2json(res.text());
+let ymlResponseTransformer = (res, options) => require('yaml').parse(res.text());
+let iniResponseTransformer = (res, options) => require('ini').parse(res.text());
+let csvResponseTransformer = (res, options) => require('csv-parse/sync').parse(res.text(), { ...options });
+let dotenvResponseTransformer = (res, options) => require('dotenv').config(Buffer.from(res.text()));
+
+
 /**
  *
+ * _optionsRequest
  *
  * @param {*} options
  * @param {*} data
@@ -63,6 +74,7 @@ function _optionsRequest(options, data, protocol, connectHandler, contentHandler
 
 /**
  *
+ * _deleteRequest
  *
  * @param {*} options
  * @param {*} data
@@ -79,6 +91,7 @@ function _deleteRequest(options, data, protocol, connectHandler, contentHandler,
 
 /**
  *
+ * _patchRequest
  *
  * @param {*} options
  * @param {*} data
@@ -95,6 +108,7 @@ function _patchRequest(options, data, protocol, connectHandler, contentHandler, 
 
 /**
  *
+ * _postRequest
  *
  * @param {*} options
  * @param {*} data
@@ -111,6 +125,7 @@ function _postRequest(options, data, protocol, connectHandler, contentHandler, e
 
 /**
  *
+ * _putRequest
  *
  * @param {*} options
  * @param {*} data
@@ -127,6 +142,7 @@ function _putRequest(options, data, protocol, connectHandler, contentHandler, er
 
 /**
  *
+ * _getRequest
  *
  * @param {*} options
  * @param {*} data
@@ -143,6 +159,9 @@ function _getRequest(options, data, protocol, connectHandler, contentHandler, er
 
 
 /**
+ * 
+ * contentTypeHandler
+ * 
  * Different contentTypeHandler Handlers
  * 
  * @param {*} responseObject
@@ -152,18 +171,28 @@ function _getRequest(options, data, protocol, connectHandler, contentHandler, er
 function contentTypeHandler(responseObject, responseBody) {
     switch (responseObject.headers['content-type']) {
         case 'application/json':
-            responseBody = JSON.parse(responseBody);
+            responseBody = jsonResponseTransformer(responseBody);
             break;
         case 'application/xml':
-            const XML = require("fast-xml-parser").XMLParser;
-            let parser = new XML();
-            responseBody = parser.parse(responseBody);
+            responseBody = xmlResponseTransformer(responseBody);
+            break;
+        case 'application/ini':
+            responseBody = iniResponseTransformer(responseBody);
+            break;
+        case 'application/yml':
+            responseBody = ymlResponseTransformer(responseBody);
+            break;
+        case 'application/csv':
+            responseBody = csvResponseTransformer(responseBody);
+            break;
+        case 'application/dotenv':
+            responseBody = dotenvResponseTransformer(responseBody);
             break;
         case 'text/html':
-            responseBody = responseBody.toString();
+            responseBody = textResponseTransformer(responseBody);
             break;
         case 'text/plain':
-            responseBody = responseBody.toString();
+            responseBody = textResponseTransformer(responseBody);
             break;
     }
     return { headers: responseObject.headers, body: responseBody }
@@ -172,6 +201,7 @@ function contentTypeHandler(responseObject, responseBody) {
 
 /**
  *
+ * _request
  *
  * @param {*} options
  * @param {*} postData
@@ -219,6 +249,7 @@ function _request(options, postData, protocol = "https", connectHandler = (res, 
 
 /**
  *
+ * _checkHttpsProtocol
  *
  * @param {*} url
  * @return {*} Boolean
@@ -233,7 +264,8 @@ function _checkHttpsProtocol(url) {
 
 
 /**
- *
+ * 
+ * _getProtocol
  *
  * @param {*} url
  * @return {*} Boolean
@@ -274,8 +306,10 @@ function _isValidURL(url) {
 
 
 /**
+ * 
+ * _fetchWrite
  *
- *
+ * 
  * @param {*} request
  * @param {*} options
  * @param {*} localGitFileCacheUrl
@@ -283,15 +317,16 @@ function _isValidURL(url) {
  * @return {*} 
  */
 function _fetchWrite(request, options, localGitFileCacheUrl, _requireWriteImport) {
-    return fetch(request).then(response => response.text())
-        .then(function (data) {
-            return _requireWriteImport(request, localGitFileCacheUrl, data, options)
-        }.bind(_requireWriteImport));
+    return _fetch(request, "text", options.transformOptions).then(function (data) {
+        return _requireWriteImport(request, localGitFileCacheUrl, data, options)
+    }.bind(_requireWriteImport));
 }
 
 
 /**
- *
+ * 
+ * transformFetchResponse
+ * 
  *
  * @param {*} response
  * @param {*} transform
@@ -299,39 +334,19 @@ function _fetchWrite(request, options, localGitFileCacheUrl, _requireWriteImport
  * @return {*} 
  */
 function transformFetchResponse(response, transform, transformOptions = { delimiter: ",", comment: "#", columns: true, skip_empty_lines: true }) {
-    let func = (res, options) => res.text();
+    let func = textResponseTransformer;
     if (transform === "json") {
-        func = (res, options) => res.json();
+        func = jsonResponseTransformer;
     } else if (transform === "xml") {
-        func = (res, options) => {
-            let txt = res.text();
-            return require('xml-js').xml2json(txt);
-        }
+        func = xmlResponseTransformer;
     } else if (transform === "yml") {
-        func = (res, options) => {
-            let txt = res.text();
-            return require('yaml').parse(txt);
-        }
+        func = ymlResponseTransformer;
     } else if (transform === "ini") {
-        func = (res, options) => {
-            let txt = res.text();
-            return require('ini').parse(txt);
-        }
+        func = iniResponseTransformer;
     } else if (transform === "csv") {
-        func = (res, options) => {
-            let txt = res.text();
-            return require('csv-parse/sync').parse(txt, { ...options });
-        }
+        func = csvResponseTransformer;
     } else if (transform === "dotenv") {
-        func = (res, options) => {
-            let txt = res.text();
-            return require('dotenv').config(Buffer.from(txt));
-        }
-    } else if (transform === "dotenv") {
-        func = (res, options) => {
-            let txt = res.text();
-            return require('dotenv').config(Buffer.from(txt));
-        }
+        func = dotenvResponseTransformer;
     }
     return func(response, transformOptions);
 }
@@ -339,6 +354,7 @@ function transformFetchResponse(response, transform, transformOptions = { delimi
 
 /**
  *
+ * _fetch
  *
  * @param {string} [url]
  * @param {string} [transform="text"]
@@ -346,7 +362,7 @@ function transformFetchResponse(response, transform, transformOptions = { delimi
  * @return {*} 
  */
 function _fetch(url, transform = "text", transformOptions) {
-    return fetch(new URL(url)).then(res => transformFetchResponse(res, transform, transformOptions));
+    return fetch(new URL(url)).then((res) => transformFetchResponse(res, transform, transformOptions));
 
     // .then(res => {
     //     res.text()       // response body (=> Promise)
@@ -394,3 +410,11 @@ module.exports.checkHttpsProtocol = _checkHttpsProtocol;
 module.exports._fetchWrite = _fetchWrite;
 module.exports._fetch = _fetch;
 module.exports._getRequireOrImport = _getRequireOrImport;
+
+module.exports.textResponseTransformer = textResponseTransformer;
+module.exports.jsonResponseTransformer = jsonResponseTransformer;
+module.exports.xmlResponseTransformer = xmlResponseTransformer;
+module.exports.ymlResponseTransformer = ymlResponseTransformer;
+module.exports.iniResponseTransformer = iniResponseTransformer;
+module.exports.csvResponseTransformer = csvResponseTransformer;
+module.exports.dotenvResponseTransformer = dotenvResponseTransformer;

@@ -22,7 +22,10 @@ const {
     isValidURL, getProtocol, checkHttpsProtocol,
     _fetch, _getRequireOrImport,
     _deleteRequest, _getRequest, _postRequest, _putRequest, _patchRequest, _request,
-    deleteRequest, getRequest, postRequest, putRequest, patchRequest, request
+    deleteRequest, getRequest, postRequest, putRequest, patchRequest, request, 
+    textResponseTransformer, jsonResponseTransformer, xmlResponseTransformer, 
+    ymlResponseTransformer, iniResponseTransformer, 
+    csvResponseTransformer, dotenvResponseTransformer
 } = require("./src/requests.js");
 
 const { CONTENT_TYPE } = require("./src/constants/content_types");
@@ -61,5 +64,15 @@ module.exports.checkHttpsProtocol = checkHttpsProtocol;
 
 module.exports._fetch = _fetch;
 module.exports._getRequireOrImport = _getRequireOrImport;
+
+
+module.exports.textResponseTransformer = textResponseTransformer;
+module.exports.jsonResponseTransformer = jsonResponseTransformer;
+module.exports.xmlResponseTransformer = xmlResponseTransformer;
+module.exports.ymlResponseTransformer = ymlResponseTransformer;
+module.exports.iniResponseTransformer = iniResponseTransformer;
+module.exports.csvResponseTransformer = csvResponseTransformer;
+module.exports.dotenvResponseTransformer = dotenvResponseTransformer;
+
 
 module.exports.constants = { CONTENT_TYPE, PROTOCOLS, PROTOCOL_NODE_MODULES, REQUEST_HEADERS, REQUEST_HEADERS_CATEGORIZED, RESPONSE_HEADERS, RESPONSE_HEADERS_CATEGORIZED };

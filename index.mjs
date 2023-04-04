@@ -22,7 +22,10 @@ import {
     _fetch, _getRequireOrImport,
     _deleteRequest, _getRequest, _postRequest, _putRequest, _patchRequest, _request,
     deleteRequest, getRequest, postRequest, putRequest, patchRequest, request,
-    constants
+    constants,
+    textResponseTransformer, jsonResponseTransformer, xmlResponseTransformer, 
+    ymlResponseTransformer, iniResponseTransformer, 
+    csvResponseTransformer, dotenvResponseTransformer
 } from "./index.js";
 
 export default _request;
@@ -32,5 +35,8 @@ export {
     _fetch, _getRequireOrImport,
     _deleteRequest, _getRequest, _postRequest, _putRequest, _patchRequest, _request,
     deleteRequest, getRequest, postRequest, putRequest, patchRequest, request,
-    constants
+    constants,
+    textResponseTransformer, jsonResponseTransformer, xmlResponseTransformer, 
+    ymlResponseTransformer, iniResponseTransformer, 
+    csvResponseTransformer, dotenvResponseTransformer
 };
