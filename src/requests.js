@@ -19,6 +19,8 @@
 
 const path = require("path");
 const fs = require('fs');
+const https = require('https');
+const http = require('http');
 const METHODS = require("./constants/methods").METHODS;
 const HTTP_PROTOCOLS = require("./constants/http_protocols").HTTP_PROTOCOLS;
 const PROTOCOL_NODE_MODULES = require("./constants/http_protocols").PROTOCOL_NODE_MODULES;
@@ -249,6 +251,48 @@ function _request(options, postData, protocol = "https", connectHandler = (res, 
 
 /**
  *
+ *
+ * @param {*} url
+ * @param {*} data
+ * @param {string} [method='POST']
+ * @return {*} 
+ */
+function makeRequest(options = { url, data, method: 'POST' }, connectHandler = (res, socket, head) => { }, contentHandler = contentTypeHandler, errorHandler = (e) => e, upgradeHandler = (res, socket, upgradeHead) => { socket.end(); process.exit(0); }) {
+
+    options = {
+        method: options.method,
+        headers: { 'Content-Type': 'application/json' }
+    };
+
+    if (options.data) {
+        options.body = JSON.stringify(options.data);
+    }
+
+    return new Promise((resolve, reject) => {
+
+        const req = https.request(options, (res) => {
+            let responseData = '';
+            res.on('data', (chunk) => {
+                responseData += chunk;
+            });
+            res.on('end', () => {
+                const responseBody = responseData ? JSON.parse(responseData) : null;
+                resolve({ statusCode: res.statusCode, body: responseBody });
+            });
+        });
+
+        req.on('error', (err) => {
+            reject(err);
+        });
+
+        req.end();
+
+    });
+}
+
+
+/**
+ *
  * _checkHttpsProtocol
  *
  * @param {*} url
@@ -409,6 +453,7 @@ module.exports.checkHttpsProtocol = _checkHttpsProtocol;
 
 module.exports._fetchWrite = _fetchWrite;
 module.exports._fetch = _fetch;
+module.exports.makeRequest = makeRequest;
 module.exports._getRequireOrImport = _getRequireOrImport;
 
 module.exports.textResponseTransformer = textResponseTransformer;
