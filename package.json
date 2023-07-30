@@ -1,6 +1,6 @@
 {
   "name": "request-apis",
-  "version": "0.0.27",
+  "version": "0.0.3",
   "description": "npm module for common request APIs and basic http requests utils",
   "main": "index.js",
   "directories": {
