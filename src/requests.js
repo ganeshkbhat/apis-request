@@ -429,6 +429,7 @@ module.exports._getRequest = _getRequest;
 module.exports._postRequest = _postRequest;
 module.exports._putRequest = _putRequest;
 module.exports._patchRequest = _patchRequest;
+module.exports._optionsRequest = _optionsRequest;
 module.exports._request = _request;
 
 
@@ -437,6 +438,7 @@ module.exports.getRequest = _getRequest;
 module.exports.postRequest = _postRequest;
 module.exports.putRequest = _putRequest;
 module.exports.patchRequest = _patchRequest;
+module.exports.optionsRequest = _optionsRequest;
 module.exports.request = _request;
 
 module.exports.del = _deleteRequest;
@@ -444,6 +446,7 @@ module.exports.get = _getRequest;
 module.exports.post = _postRequest;
 module.exports.put = _putRequest;
 module.exports.patch = _patchRequest;
+module.exports.options = _optionsRequest;
 module.exports.request = _request;
 
 

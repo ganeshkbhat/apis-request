@@ -65,6 +65,8 @@ Usage:
 
 `.getRequest(options)`
 
+`.get(options)`
+
 
 ```
 /**
@@ -93,6 +95,8 @@ Usage:
 
 `.postRequest(options, data, protocol)`
 
+`.post(options, data, protocol)`
+
 
 ```
 /**
@@ -120,6 +124,8 @@ Usage:
 `.putRequest(options, data, protocol, connectHandler, contentHandler, errorHandler, upgradeHandler)`
 
 `.putRequest(options, data, protocol)`
+
+`.put(options, data, protocol)`
 
 
 ```
@@ -174,6 +180,8 @@ Usage:
 
 `.deleteRequest(options)`
 
+`.del(options)`
+
 
 ```
 /**
@@ -200,6 +208,8 @@ Usage:
 `.optionsRequest(options, data, protocol, connectHandler, contentHandler, errorHandler, upgradeHandler)`
 
 `.optionsRequest(options)`
+
+`.options(options)`
 
 
 ```

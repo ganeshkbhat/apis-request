@@ -21,9 +21,9 @@ const {
     _isValidURL, _getProtocol, _checkHttpsProtocol,
     isValidURL, getProtocol, checkHttpsProtocol,
     _fetch, _getRequireOrImport,
-    _deleteRequest, _getRequest, _postRequest, _putRequest, _patchRequest, _request,
-    deleteRequest, getRequest, postRequest, putRequest, patchRequest, request, 
-    del, get, post, put, patch, 
+    _optionsRequest, _deleteRequest, _getRequest, _postRequest, _putRequest, _patchRequest, _request,
+    optionsRequest, deleteRequest, getRequest, postRequest, putRequest, patchRequest, request, 
+    options, del, get, post, put, patch, 
     textResponseTransformer, jsonResponseTransformer, xmlResponseTransformer, 
     ymlResponseTransformer, iniResponseTransformer, 
     csvResponseTransformer, dotenvResponseTransformer
@@ -42,6 +42,7 @@ module.exports._getRequest = _getRequest;
 module.exports._postRequest = _postRequest;
 module.exports._putRequest = _putRequest;
 module.exports._patchRequest = _patchRequest;
+module.exports._optionsRequest = _optionsRequest;
 module.exports._request = _request;
 
 module.exports.deleteRequest = deleteRequest;
@@ -49,6 +50,7 @@ module.exports.getRequest = getRequest;
 module.exports.postRequest = postRequest;
 module.exports.putRequest = putRequest;
 module.exports.patchRequest = patchRequest;
+module.exports.optionsRequest = optionsRequest;
 module.exports.request = request;
 
 module.exports.del = del;
@@ -56,6 +58,7 @@ module.exports.get = get;
 module.exports.post = post;
 module.exports.put = put;
 module.exports.patch = patch;
+module.exports.options = options;
 
 
 // Make http checks
