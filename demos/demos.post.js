@@ -43,7 +43,7 @@ let data = {
 let r = req._postRequest({ hostname: "petstore.swagger.io", port: 443, path: "/v2/pet", method: "POST", headers: { "content-type": "application/json", "accept": "application/json" } }, data, "https");
 r.then(rs => console.log(JSON.stringify(rs)))
 
-data.name = "newstrore";
+data.name = "newstore";
 
 let rc = req._postRequest({ hostname: "petstore.swagger.io", port: 443, path: "/v2/pet", method: "POST", headers: { "content-type": "application/json", "accept": "application/json" } }, data, "https");
 rc.then(rs => console.log(JSON.stringify(rs)))

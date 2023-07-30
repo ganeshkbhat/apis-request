@@ -48,13 +48,13 @@ function _getRequireOrImport(module_name) {
 }
 
 
-let textResponseTransformer = (res, options) => res.text();
-let jsonResponseTransformer = (res, options) => res.json();
-let xmlResponseTransformer = (res, options) => require('xml-js').xml2json(res.text());
-let ymlResponseTransformer = (res, options) => require('yaml').parse(res.text());
-let iniResponseTransformer = (res, options) => require('ini').parse(res.text());
-let csvResponseTransformer = (res, options) => require('csv-parse/sync').parse(res.text(), { ...options });
-let dotenvResponseTransformer = (res, options) => require('dotenv').config(Buffer.from(res.text()));
+let textResponseTransformer = (res, options) => new String(res);
+let jsonResponseTransformer = (res, options) => JSON.stringify(res);
+let xmlResponseTransformer = (res, options) => require('xml-js').xml2json(textResponseTransformer(res));
+let ymlResponseTransformer = (res, options) => require('yaml').parse(textResponseTransformer(res));
+let iniResponseTransformer = (res, options) => require('ini').parse(textResponseTransformer(res));
+let csvResponseTransformer = (res, options) => require('csv-parse/sync').parse(textResponseTransformer(res), { ...options });
+let dotenvResponseTransformer = (res, options) => require('dotenv').config(Buffer.from(textResponseTransformer(res)));
 
 
 /**
@@ -437,6 +437,13 @@ module.exports.getRequest = _getRequest;
 module.exports.postRequest = _postRequest;
 module.exports.putRequest = _putRequest;
 module.exports.patchRequest = _patchRequest;
+module.exports.request = _request;
+
+module.exports.del = _deleteRequest;
+module.exports.get = _getRequest;
+module.exports.post = _postRequest;
+module.exports.put = _putRequest;
+module.exports.patch = _patchRequest;
 module.exports.request = _request;
 
 

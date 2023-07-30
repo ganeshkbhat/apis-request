@@ -23,6 +23,7 @@ const {
     _fetch, _getRequireOrImport,
     _deleteRequest, _getRequest, _postRequest, _putRequest, _patchRequest, _request,
     deleteRequest, getRequest, postRequest, putRequest, patchRequest, request, 
+    del, get, post, put, patch, 
     textResponseTransformer, jsonResponseTransformer, xmlResponseTransformer, 
     ymlResponseTransformer, iniResponseTransformer, 
     csvResponseTransformer, dotenvResponseTransformer
@@ -49,6 +50,12 @@ module.exports.postRequest = postRequest;
 module.exports.putRequest = putRequest;
 module.exports.patchRequest = patchRequest;
 module.exports.request = request;
+
+module.exports.del = del;
+module.exports.get = get;
+module.exports.post = post;
+module.exports.put = put;
+module.exports.patch = patch;
 
 
 // Make http checks
