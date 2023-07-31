@@ -152,6 +152,8 @@ Create a patch request. Allows for handling connect, error, upgrade events speci
 
 `.patchRequest(options, data, protocol)`
 
+`.patch(options, data, protocol)`
+
 
 ```
 /**
